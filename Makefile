@@ -28,11 +28,11 @@ endif
 # To add a cpp file called myfile.cpp see comments below
 
 billiards: main.o ball.o # myfile.o 
-	#./cpplint.py --filter=-readability/todo,-readability/streams,-runtime/threadsafe_fn,-legal,-build/namespaces,-build/header_guard *.cpp *.h
+	./cpplint.py --filter=-readability/todo,-readability/streams,-runtime/threadsafe_fn,-legal,-build/namespaces,-build/header_guard *.cpp *.h
 	${CC} ${CFLAGS} $(INCLUDE) -o billiards main.o ball.o ${LIBDIR} ${LIBS}
 #	${CC} ${CFLAGS} $(INCLUDE) -o billiards main.o ball.o myfile.o ${LIBDIR} ${LIBS} # replace the previous line with this line
 
-main.o: main.cpp common.h geom2.h
+main.o: main.cpp common.h #geom2.h
 	${CC} -c ${CFLAGS} $(INCLUDE) main.cpp
 
 ball.o: ball.cpp ball.h common.h geom2.h

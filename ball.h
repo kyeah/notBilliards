@@ -10,19 +10,19 @@ using namespace std;
 // A handy Ball class
 class Ball {
  public:
-  Ball(GLfloat _x, GLfloat _y, GLint _r, Color _c); 
-  
+  Ball(GLfloat _x, GLfloat _y, GLint _r, Color _c);
+
   operator GLfloat*() { return x; }
   GLint operator[](int i) const { return x[i]; }
-  GLfloat x[2];    // Position
+  Color c;
+  GLfloat x[2];  // Position
   GLfloat v[2];  // Velocity
-  GLfloat a[2];
+  GLfloat a[2];  // Acceleration
   GLfloat mass;
   GLint radius;
-  Color c;
-  GLfloat speed;
-  
+
   void draw();
+  void checkBounds();
   void update(float elapsed_time);
 };
 

@@ -13,8 +13,8 @@
 #endif
 
 const double PI = 3.14159;
-const double alpha = .6;
-const double drag = -0.4;
+const double velocity_coeff = 2.5;  // Scales the mouse drag vector for velocity
+const double drag_coeff = -.7;   // The drag coefficient for decceleration
 const int window_width = 800;
 const int window_height = 600;
 
