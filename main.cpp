@@ -8,16 +8,20 @@
 
 using namespace std;
 
+enum { DRAW_NULL, DRAW_AIM, DRAW_SHOT };
+
 vector<Ball> balls;
 vector<Ball> scored;
 vector<Ball> holes;
 GLint mouse_down[2];
-bool draw_line = false;
+int draw_line = DRAW_NULL;
+float shot_time = 0;
 float last_time = glutGet(GLUT_ELAPSED_TIME);
 
 Color colors[] = {kYellow, kBlue, kBrown, kViolet, kOrange, kGreen, kRed};
 
 void TableSetup() {
+  // Pocket Setup
   holes.push_back(Ball(15.0, 15.0, 25, kBlack, false));
   holes.push_back(Ball(15.0, window_height-15, 25, kBlack, false));
   holes.push_back(Ball(window_width/2, 8.0, 25, kBlack, false));
@@ -25,8 +29,10 @@ void TableSetup() {
   holes.push_back(Ball(window_width-15, 15.0, 25, kBlack, false));
   holes.push_back(Ball(window_width-15, window_height-18, 25, kBlack, false));
 
-  balls.push_back(Ball(150, window_height/2, 15, kWhite, false));  // Cueball
+  // Cueball Setup
+  balls.push_back(Ball(150, window_height/2, 15, kWhite, false));
 
+  // 15-ball Billiards Setup
   int ball_num = 1;
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < i + 1; j++) {
@@ -46,6 +52,72 @@ void TableSetup() {
       ball_num++;
     }
   }
+}
+
+void drawTable() {
+  glColor3f(0.545098, 0.270588, 0.0745098);
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex2f(0.0, 0.0);
+  glVertex2f(25.0, 0.0);
+  glVertex2f(25.0, 400.0);
+  glVertex2f(0.0, 400.0);
+  glEnd();
+
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex2f(0.0, 0.0);
+  glVertex2f(800.0, 0.0);
+  glVertex2f(800.0, 25.0);
+  glVertex2f(0.0, 25.0);
+  glEnd();
+
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex2f(800.0, 0.0);
+  glVertex2f(800.0, 400.0);
+  glVertex2f(775.0, 400.0);
+  glVertex2f(775.0, .0);
+  glEnd();
+
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex2f(800.0, 400.0);
+  glVertex2f(800.0, 375.0);
+  glVertex2f(0.0, 375.0);
+  glVertex2f(0.0, 400.0);
+  glEnd();
+}
+
+void drawCueStick() {
+  float tip_scale, end_scale;
+  if (draw_line == DRAW_AIM) {
+    tip_scale = .5;
+    end_scale = 5;
+  } else {
+    tip_scale = .95;
+    end_scale = 4;
+  }
+
+  glLineWidth(7);
+  glColor3f(.647, .1647, .1647);
+
+  glBegin(GL_LINES);
+  glVertex2f(mouse_down[0] + tip_scale*(balls[0].x[0] - mouse_down[0]),
+             mouse_down[1] + tip_scale*(balls[0].x[1] - mouse_down[1]));
+  glVertex2f(mouse_down[0] - end_scale*(balls[0].x[0] - mouse_down[0]),
+             mouse_down[1] - end_scale*(balls[0].x[1] - mouse_down[1]));
+  glEnd();
+}
+
+void drawAimHelper() {
+  glLineWidth(2);
+  glColor3f(1, 1, 1);
+  glLineStipple(1, 10);
+  glEnable(GL_LINE_STIPPLE);
+
+  glBegin(GL_LINES);
+  glVertex2f(balls[0].x[0], balls[0].x[1]);
+  glVertex2f(mouse_down[0] + 3*(balls[0].x[0] - mouse_down[0]),
+             mouse_down[1] + 3*(balls[0].x[1] - mouse_down[1]));
+  glEnd();
+  glDisable(GL_LINE_STIPPLE);
 }
 
 void Init() {
@@ -96,35 +168,7 @@ void Display() {
   glClearColor(0, 0.4, 0.1, 0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  // TABLE STUFF
-  glColor3f(0.545098, 0.270588, 0.0745098);
-  glBegin(GL_TRIANGLE_FAN);
-  glVertex2f(0.0, 0.0);
-  glVertex2f(25.0, 0.0);
-  glVertex2f(25.0, 400.0);
-  glVertex2f(0.0, 400.0);
-  glEnd();
-
-  glBegin(GL_TRIANGLE_FAN);
-  glVertex2f(0.0, 0.0);
-  glVertex2f(800.0, 0.0);
-  glVertex2f(800.0, 25.0);
-  glVertex2f(0.0, 25.0);
-  glEnd();
-
-  glBegin(GL_TRIANGLE_FAN);
-  glVertex2f(800.0, 0.0);
-  glVertex2f(800.0, 400.0);
-  glVertex2f(775.0, 400.0);
-  glVertex2f(775.0, .0);
-  glEnd();
-
-  glBegin(GL_TRIANGLE_FAN);
-  glVertex2f(800.0, 400.0);
-  glVertex2f(800.0, 375.0);
-  glVertex2f(0.0, 375.0);
-  glVertex2f(0.0, 400.0);
-  glEnd();
+  drawTable();
 
   for (int i = 0; i < holes.size(); i++)
     holes[i].draw();
@@ -133,12 +177,11 @@ void Display() {
   for (int i = 0; i < scored.size(); i++)
     scored[i].draw();
 
-  if (draw_line) {
-    glColor3f(1, 1, 1);
-    glBegin(GL_LINES);
-    glVertex2f(balls[0].x[0], balls[0].x[1]);
-    glVertex2f(mouse_down[0], mouse_down[1]);
-    glEnd();
+  if (draw_line == DRAW_SHOT && glutGet(GLUT_ELAPSED_TIME) - shot_time > 25) {
+    draw_line = DRAW_NULL;
+  } else if (draw_line != DRAW_NULL) {
+    drawCueStick();
+    drawAimHelper();
   }
 
   glFlush();
@@ -151,14 +194,15 @@ void Mouse(int button, int state, int x, int y) {
     if (state == GLUT_DOWN) {
       mouse_down[0] = x;
       mouse_down[1] = y;
-      draw_line = true;
+      draw_line = DRAW_AIM;
     }
     if (state == GLUT_UP) {
       balls[0].v.x[0] = velocity_coeff * (balls[0].x[0] - mouse_down[0]);
       balls[0].v.x[1] = velocity_coeff * (balls[0].x[1] - mouse_down[1]);
       balls[0].a[0] = drag_coeff*balls[0].v[0];
       balls[0].a[1] = drag_coeff*balls[0].v[1];
-      draw_line = false;
+      draw_line = DRAW_SHOT;
+      shot_time = glutGet(GLUT_ELAPSED_TIME);
     }
   }
   glutPostRedisplay();
