@@ -7,32 +7,26 @@
 
 using namespace std;
 
-// A handy Ball class
 class Ball {
  public:
-  Ball(GLfloat _x, GLfloat _y, GLint _r, Color _c);
+  Ball(GLfloat _x, GLfloat _y, GLint _r, Color _c, bool _solid);
 
   operator GLfloat*() { return x; }
   GLint operator[](int i) const { return x[i]; }
   Color c;
   GLfloat x[2];  // Position
-  GLfloat v[2];  // Velocity
+  Vector v;      // Velocity
   GLfloat a[2];  // Acceleration
   GLfloat mass;
   GLint radius;
+  bool solid;
 
   void draw();
   void checkBounds();
+  bool collide(Ball *other);
+  void elasticCollision(Ball *other);
   void update(float elapsed_time);
+  void setVelocity(GLfloat vx, GLfloat vy);
 };
-
-const Color kRed = Color(1, 0, 0);
-const Color kGreen = Color(0, 1, 0);
-const Color kBlue = Color(0, 0, 1);
-const Color kYellow = Color(1, 1, 0);
-const Color kCyan = Color(0, 1, 1);
-const Color kMagenta = Color(1, 0, 1);
-const Color kBlack = Color(0, 0, 0);
-const Color kWhite = Color(1, 1, 1);
 
 #endif
