@@ -80,15 +80,8 @@ void Ball::setVelocity(GLfloat vx, GLfloat vy) {
 }
 
 void Ball::elasticCollision(Ball *other) {
-  GLfloat moveDist;
-  GLfloat position[2];
-  GLfloat velocity[2];
-
-  GLfloat dot;
-  GLfloat d;
-  GLfloat collDist;
-  GLfloat a;
-  GLfloat opt;
+  GLfloat position[2], velocity[2];
+  GLfloat dot, d, a;
 
   position[0] = other->x[0] - x[0];
   position[1] = other->x[1] - x[1];
