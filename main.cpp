@@ -24,8 +24,8 @@ void TableSetup() {
   // Pocket Setup
   holes.push_back(Ball(15.0, 15.0, 25, kBlack, false));
   holes.push_back(Ball(15.0, window_height-15, 25, kBlack, false));
-  holes.push_back(Ball(window_width/2, 8.0, 25, kBlack, false));
-  holes.push_back(Ball(window_width/2, window_height-8, 25, kBlack, false));
+  holes.push_back(Ball(window_width/2, 5.0, 25, kBlack, false));
+  holes.push_back(Ball(window_width/2, window_height-5, 25, kBlack, false));
   holes.push_back(Ball(window_width-15, 15.0, 25, kBlack, false));
   holes.push_back(Ball(window_width-15, window_height-18, 25, kBlack, false));
 
@@ -58,30 +58,30 @@ void drawTable() {
   glColor3f(0.545098, 0.270588, 0.0745098);
   glBegin(GL_TRIANGLE_FAN);
   glVertex2f(0.0, 0.0);
-  glVertex2f(25.0, 0.0);
-  glVertex2f(25.0, 400.0);
-  glVertex2f(0.0, 400.0);
+  glVertex2f(20.0, 0.0);
+  glVertex2f(20.0, window_height);
+  glVertex2f(0.0, window_height);
   glEnd();
 
   glBegin(GL_TRIANGLE_FAN);
   glVertex2f(0.0, 0.0);
-  glVertex2f(800.0, 0.0);
-  glVertex2f(800.0, 25.0);
-  glVertex2f(0.0, 25.0);
+  glVertex2f(window_width, 0.0);
+  glVertex2f(window_width, 20.0);
+  glVertex2f(0.0, 20.0);
   glEnd();
 
   glBegin(GL_TRIANGLE_FAN);
-  glVertex2f(800.0, 0.0);
-  glVertex2f(800.0, 400.0);
-  glVertex2f(775.0, 400.0);
-  glVertex2f(775.0, .0);
+  glVertex2f(window_width, 0.0);
+  glVertex2f(window_width, window_height);
+  glVertex2f(window_width - 20, window_height);
+  glVertex2f(window_width - 20, .0);
   glEnd();
 
   glBegin(GL_TRIANGLE_FAN);
-  glVertex2f(800.0, 400.0);
-  glVertex2f(800.0, 375.0);
-  glVertex2f(0.0, 375.0);
-  glVertex2f(0.0, 400.0);
+  glVertex2f(window_width, window_height);
+  glVertex2f(window_width, window_height - 20);
+  glVertex2f(0.0, window_height - 20);
+  glVertex2f(0.0, window_height);
   glEnd();
 }
 
