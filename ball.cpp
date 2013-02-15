@@ -49,20 +49,20 @@ void Ball::update(float elapsed_time) {
 
 void Ball::checkBounds() {
   // Horizontal Bounds
-  if (x[0] - radius < 25) {
-    x[0] = radius + 25;
+  if (x[0] - radius < 20) {
+    x[0] = radius + 20;
     v.x[0] = abs(v.x[0]);
-  } else if (x[0] + radius > window_width - 25) {
-     x[0] = window_width - 25 - radius;
+  } else if (x[0] + radius > window_width - 20) {
+     x[0] = window_width - 20 - radius;
     v.x[0] = -abs(v.x[0]);
   }
 
   // Vertical Bounds
-  if (x[1] - radius < 25) {
-     x[1] = radius + 25;
+  if (x[1] - radius < 20) {
+     x[1] = radius + 20;
     v.x[1] = abs(v[1]);
-  } else if (x[1] + radius > window_height - 25) {
-     x[1] = window_height - 25 - radius;
+  } else if (x[1] + radius > window_height - 20) {
+     x[1] = window_height - 20 - radius;
     v.x[1] = -abs(v.x[1]);
   }
 }
