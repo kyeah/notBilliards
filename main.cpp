@@ -227,8 +227,8 @@ int main(int argc, char** argv) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(window_width, window_height);
-  glutInitWindowPosition(300, 300);
-  glutCreateWindow("BILLIARDS!!!!");
+  glutInitWindowPosition(500, 300);
+  glutCreateWindow("Definitely Not Billiards");
   glutDisplayFunc(Display);
   glutMouseFunc(Mouse);
   glutMotionFunc(MouseMotion);
